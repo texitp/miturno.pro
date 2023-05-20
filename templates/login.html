@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extracss %}{% endblock %}
+
+{% block auth %}
+    <div class="content"  style="text-align: center">
+
+        <small>
+            Propuesta no oficial. Antes de registrarse:<br>
+            por favor revise el
+            <a style="color: blue" href="https://t.me/+ZE8DXJVZMqc4MGVh">
+                Grupo de Telegram
+            </a>
+        </small>
+
+        <form class="login" autocomplete="off" style="margin-top: -60px" method="post"
+              onsubmit="return animate_btn()"> {% csrf_token %}
+
+          <div class="segment">
+            <h1>Acceder</h1>
+          </div>
+
+          <label>
+            <input id="ilicencia" maxlength="11" required type="text" name="uname" autofocus
+                   placeholder="Carnet" value="{{ uname }}"/>
+          </label>
+          <label>
+            <input id="ipassword" name="pwd" required type="password" placeholder="Contraseña"/>
+          </label>
+          <button class="red" type="submit">
+              <i id="ibtn_submit" class="icon fa fa-sign-in"></i> Entrar
+          </button>
+
+          <div class="segment">
+            <a href="{% url 'register' %}">
+                Registrarme
+            </a> &nbsp;
+{#                    <a href="{% url 'forgot' %}">#}
+{#                        Recuperar contraseña#}
+{#                    </a>#}
+          </div>
+
+        </form>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        function animate_btn(){
+            dget('ibtn_submit').className = 'icon fa fa-spinner fa-spin';
+            return true;
+        }
+    </script>
+{% endblock %}

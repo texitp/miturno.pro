@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="content">
+        {% if cola_diesel %}
+            <div class="alert alert--info">
+                <h5><small>Para eliminar un vehículo seleccione "No visto"</small></h5>
+            </div>
+            <h2>Del {{ cola_diesel.first.turno }} al {{ cola_diesel.last.turno }}</h2>
+            <table class="pure-table pure-table-horizontal pure-table-bordered">
+                <thead>
+                    <tr>
+                        <th>Número</th>
+                        <th>Vehículo</th>
+                        <th>Opción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cola in cola_diesel %}
+                        <tr>
+                            <td>
+                                {{ cola.turno }}
+                            </td>
+                            <td>
+                                {{ cola.fk_Vehiculo.fk_Chofer.carnet }}<br>
+                                {{ cola.fk_Vehiculo.fk_Chofer.nombre }}<br>
+                                {{ cola.fk_Vehiculo.matricula }}
+                            </td>
+                            <td>
+                                <label>
+                                    <select id="sel_{{ cola.pk }}"
+                                            onchange="show_input('{{ cola.pk }}', this.options.selectedIndex,)">
+                                        <option value="0">--Seleccione--</option>
+                                        <option value="0">No visto</option>
+                                        <option value="50">50 litros</option>
+                                        <option value="100">100 litros</option>
+                                        <option value="-1">Otro valor</option>
+                                    </select>
+                                    <br>
+                                    <label>
+                                        <input class="hidden" id="otro{{ cola.pk }}"
+                                               placeholder="cantidad" type="number"/>
+                                    </label>
+                                  <button class="red" id="btn_{{ cola.pk }}" onclick="dar_baja('{{ cola.pk }}')">
+                                    <i id="ibtn_submit{{ cola.pk }}" class="icon fa fa-save"></i> Procesar
+                                  </button>
+                                </label>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <br>
+            <h2>No hay vehículos en cola.</h2>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        function dar_baja(pk_cola){
+            if (dget('sel_'+pk_cola).options.selectedIndex == 0) {
+                message("Seleccione cantidad de combustible", 'error');
+                return;
+            }
+            jQuery.ajax({
+                url: '/dar_baja_cola/', type: 'GET', async: true,
+                data: {"pk_cola": pk_cola, "litros": dget('sel_'+pk_cola).value },
+                success: function(r) {
+                    message('Vehículo procesado.', 'success');
+                    dget('sel_'+pk_cola).style.display = 'none';
+                    dget('btn_'+pk_cola).style.display = 'none';
+                    dget('otro'+pk_cola).style.display = 'none';
+                },
+                error: null
+            });
+        }
+        function show_input(pk_cola, opt){
+            if (opt>5) {
+                dget('otro' + pk_cola).classList.remove("hidden");
+                dget('otro' + pk_cola).focus();
+            }
+            else {
+                dget('otro' + pk_cola).classList.add("hidden");
+            }
+        }
+    </script>
+{% endblock %}

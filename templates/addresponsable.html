@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extracss %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <form class="login" autocomplete="off" style="margin-top: -35px" method="post"
+              onsubmit="return animate_btn()"> {% csrf_token %}
+          <div class="segment">
+          </div>
+            <label>
+                <select name="servi" id="id_servi">
+                    <option value="0"> -- Seleccione -- </option>
+                    {% for servi in servicentros %}
+                        <option
+                                {% if form.pk_servi == servi.pk %}selected{% endif %}
+                                value="{{ servi.pk }}">{{ servi.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>
+              <input id="inombre" required type="text" name="name"
+                   placeholder="Nombre" value="{{ form.uname }}"/>
+            </label>
+            <label>
+              <input id="iuser" required type="text" name="user"
+                   placeholder="Usuario" value="{{ form.user }}"/>
+            </label>
+            <label>
+              <input id="imail" required type="text" name="correo"
+                   placeholder="Correo" value="{{ form.correo }}"/>
+            </label>
+            <button class="red" type="submit">
+              <i id="ibtn_submit" class="icon fa fa-save"></i> Guardar
+            </button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        function animate_btn(){
+            if (dget('id_servi').options.selectedIndex == 0) {
+                message("Seleccione Servicentro", 'error');
+                return false;
+            }
+            dget('ibtn_submit').className = 'icon fa fa-spinner fa-spin';
+            return true;
+        }
+    </script>
+{% endblock %}

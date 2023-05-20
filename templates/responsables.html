@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extracss %}{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <a href="{% url 'add_responsable' %}">
+          <button class="">
+                  <i id="ibtn_submit" class="icon fa fa-plus"></i> Adicionar Responsable
+          </button>
+        </a>
+        {% if responsables %}
+            <table class="pure-table pure-table-horizontal">
+                <thead>
+                    <tr>
+                        <th>Servicentro</th>
+                        <th>Nombre</th>
+                        <th>Usuario</th>
+                        <th>Correo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for resp in responsables %}
+                        <tr>
+                            <td>{{ resp.fk_Servi.nombre }}</td>
+                            <td>{{ resp.fk_User.first_name }}</td>
+                            <td>{{ resp.fk_User.username }}</td>
+                            <td>{{ resp.correo }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <h1>No hay responsables.</h1>
+        {% endif %}
+    </div>
+{% endblock %}

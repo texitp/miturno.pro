@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extracss %}{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <a href="{% url 'add_auto' %}">
+          <button>
+              <i id="ibtn_submit" class="icon fa fa-plus"></i> Adicionar Auto
+          </button>
+        </a>
+        {% if autos %}
+            <table class="pure-table pure-table-horizontal pure-table-bordered">
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Combustible</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for auto in autos %}
+                        <tr>
+                            <td>{{ auto.matricula }}</td>
+                            <td>
+                                {% if auto.gasolina %}gasolina{% else %}diesel{% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if not turnos %}
+                <a href="{% url 'add_reserva' %}">
+                  <button>
+                      <i id="ibtn_submit" class="icon fa fa-plus"></i> Solicitar Turno
+                  </button>
+                </a>
+            {% endif %}
+        {% else %}
+            <h1>No hay autos.</h1>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extracss %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <form class="login" autocomplete="off" style="margin-top: -35px" method="post"
+              onsubmit="return animate_btn()"> {% csrf_token %}
+          <div class="segment">
+          </div>
+          <label>
+            <select name="servi" id="id_servi">
+                <option value="{{ servi.pk }}">{{ servi.nombre }}</option>
+            </select>
+          </label>
+            <label>
+            <select name="combustible" id="id_combu">
+                <option value=""> -- Seleccione Tipo -- </option>
+                <option value="1"> gasolina </option>
+                <option value="0"> diesel </option>
+            </select>
+          </label>
+          <label>
+            <input id="" required type="number" name="cantidad"
+                   placeholder="litros"/>
+          </label>
+          <button class="red" type="submit">
+              <i id="ibtn_submit" class="icon fa fa-save"></i> Guardar
+          </button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        function animate_btn(){
+            if (dget('id_combu').options.selectedIndex == 0) {
+                message("Seleccione tipo de Combustible", 'error');
+                return false;
+            }
+            dget('ibtn_submit').className = 'icon fa fa-spinner fa-spin';
+            return true;
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extracss %}{% endblock %}
+
+{% block auth %}
+    <div class="content"  style="text-align: center">
+        <small>
+            Propuesta no oficial. Antes de registrarse:<br>
+            por favor revise el
+            <a style="color: blue" href="https://t.me/+ZE8DXJVZMqc4MGVh">
+                Grupo de Telegram
+            </a>
+        </small>
+        <form class="login" autocomplete="off" style="margin-top: -60px" method="post"
+              onsubmit="return animate_btn()"> {% csrf_token %}
+          <div class="segment">
+            <h1>Registro</h1>
+          </div>
+
+          <label>
+            <input id="ilicencia" maxlength="11" required type="text" name="licencia" autofocus
+                   placeholder="Carnet" value="{{ form.licencia }}"/>
+          </label>
+          <label>
+            <input id="iname" maxlength="100" required type="text" name="name"
+                   placeholder="Nombre" value="{{ form.name }}"/>
+          </label>
+          <label>
+            <input id="iphone" maxlength="10" required type="text" name="phone"
+                   placeholder="Teléfono" value="{{ form.phone }}"/>
+          </label>
+          <label>
+            <input id="ipassword" name="pwd" required placeholder="Contraseña (fácil de recordar)"/>
+          </label>
+          <button class="red" type="submit">
+              <i id="ibtn_submit" class="icon fa fa-sign-in"></i> Entrar
+          </button>
+
+              <div class="segment">
+                <a href="{% url 'index' %}">
+                    Cancelar
+                </a> &nbsp;
+{#                    <a href="{% url 'forgot' %}">#}
+{#                        Recuperar contraseña#}
+{#                    </a>#}
+              </div>
+
+        </form>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    {% if error_msg %}
+        <script>
+            $.toast({
+                //heading: 'Error',
+                text: '{{ error_msg }}',
+                position: 'top-center',
+                icon: 'error',
+                stack: true
+            });
+            dget('ipassword').focus();
+        </script>
+    {% endif %}
+
+    <script>
+        function animate_btn(){
+            const regex = /^[0-9]*$/;
+            if (dget('ilicencia').value.length < 11 || !regex.test(dget('ilicencia').value)) {
+              message("Licencia incorrecta", 'error');
+              dget('ilicencia').focus();
+              return false;
+            }
+            if (dget('iphone').value.length < 8 || !regex.test(dget('iphone').value)) {
+              message("Teléfono incorrecto", 'error');
+              dget('iphone').focus();
+              return false;
+            }
+            dget('ibtn_submit').className = 'icon fa fa-spinner fa-spin';
+            return true;
+        }
+    </script>
+{% endblock %}

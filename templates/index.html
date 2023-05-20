@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="content">
+        {% if pasar_por %}
+            {% for servi, turno in pasar_por.items %}
+                <div class="alert alert--info">
+                    <h2>{{ servi }}{{ turno }}.</h2>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <h2>Estado de Servicentros</h2>
+        <table class="pure-table pure-table-horizontal pure-table-bordered">
+            <thead>
+                <tr>
+                    <th>Servicentro</th>
+                    <th>Gasolina</th>
+                    <th>Diesel</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for servi in servicentros %}
+                    <tr style="text-align: center">
+                        <td>
+                            {{ servi.nombre }}
+                        </td>
+                        <td>
+                            Hay {{ servi.total_gasolina|floatformat:"0" }} litros
+                            <br>
+                            <small>En cola:</small>
+                            <br>
+                            {{ servi.get_total_cola_gasolina }} <i id="" class="icon fa fa-car"></i>
+                            <br>
+                            <small>Ultimo # servido:</small>
+                            <br>
+                            {{ servi.get_ultimo_turno_servido_gasolina }}
+                            {% if servi.get_total_cola_gasolina and servi.total_gasolina > 0 %}
+                                <br>
+                                <a href="tiempo_real_gasolina/{{ servi.pk }}" class="red">
+                                    <button>Tiempo real</button>
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            Hay {{ servi.total_diesel|floatformat:"0" }} litros
+                            <br>
+                            <small>En cola:</small>
+                            <br>
+                            {{ servi.get_total_cola_diesel }} <i id="" class="icon fa fa-truck"></i>
+                            <br>
+                            <small>Ultimo # servido:</small>
+                            <br>
+                            {{ servi.get_ultimo_turno_servido_diesel }}
+                            {% if servi.get_total_cola_diesel and servi.total_diesel > 0 %}
+                                <br>
+                                <a href="tiempo_real_diesel/{{ servi.pk }}" class="red">
+                                    <button>Tiempo real</button>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h2>Abastecimientos <small>(últimas 5 veces)</small></h2>
+        <table class="pure-table pure-table-horizontal pure-table-bordered">
+            <thead>
+                <tr>
+                    <th>Servicentro</th>
+                    <th>Gasolina</th>
+                    <th>Diesel</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for servi in servicentros %}
+                    <tr>
+                        <td>{{ servi.nombre }}</td>
+                        <td>
+                            {% for pipa_gasolina in servi.get_ultimas_pipas_gasolina %}
+                                {{ pipa_gasolina.fecha|date:"d/m h:i a" }} <br>
+                                {{ pipa_gasolina.litros|floatformat:"0" }} litros
+                                <br><br>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for pipa_diesel in servi.get_ultimas_pipas_diesel %}
+                                {{ pipa_diesel.fecha|date:"d/m h:i a" }} <br>
+                                {{ pipa_diesel.litros|floatformat:"0" }} litros
+                                <br><br>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
